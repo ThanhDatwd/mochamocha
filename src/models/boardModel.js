@@ -82,6 +82,7 @@ const getDetails = async (id) => {
     throw new Error(error);
   }
 };
+
 export const boardModel = {
   BOARD_COLLECTION_NAME,
   BOARD_COLLECTION_SCHEMA,

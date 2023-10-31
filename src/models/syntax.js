@@ -33,5 +33,5 @@ const syntax = async (id) => {
         $addToSet: { key: "value" }, // chỉ thêm vào khi phần tử đó chưa tồn tại trong mảng
       }
     );
-  await GET_DB().collection(COLLECTION_NAME);
+  await GET_DB().collection(COLLECTION_NAME).drop(); // xoá collection;
 };
