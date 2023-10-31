@@ -8,21 +8,6 @@ const Router = express.Router();
 
 Router.route("/")
   .get((req, res) => {
-    var lengthOfLongestSubstring = function (s) {
-      let str = [];
-      let arrayS = s.split("");
-      for (let i = 0; i < arrayS.length; i++) {
-        const indexExitting = str.indexOf(arrayS[i]);
-        if (indexExitting !== -1) {
-          str.splice(0, indexExitting + 1);
-        }
-        str.push(arrayS[i]);
-      }
-      console.log(Math.max(0, str.length));
-      console.log(str);
-      return Math.max(0, str.length);
-    };
-    lengthOfLongestSubstring("abcabcbb");
     res.status(StatusCodes.OK).json({
       message: "APIs get board",
     });

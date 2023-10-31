@@ -2,8 +2,9 @@
 import Joi from "joi";
 import { ObjectId } from "mongodb";
 import { GET_DB } from "~/config/mongodb";
-import { columnModel } from "./columnModel";
+import { columnModel } from "~/models/columnModel";
 import { OBJECT_ID_RULE, OBJECT_ID_RULE_MESSAGE } from "~/utils/validators";
+import { cardModel } from "~/models/cardModel";
 
 const BOARD_COLLECTION_NAME = "boards";
 const BOARD_COLLECTION_SCHEMA = Joi.object({
@@ -64,6 +65,14 @@ const getDetails = async (id) => {
             localField: "_id",
             foreignField: "boadId",
             as: "columns",
+          },
+        },
+        {
+          $lookup: {
+            from: cardModel.CARD_COLLECTION_NAME,
+            localField: "_id",
+            foreignField: "boadId",
+            as: "cards",
           },
         },
       ])
