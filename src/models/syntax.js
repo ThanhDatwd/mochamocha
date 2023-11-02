@@ -35,3 +35,37 @@ const syntax = async (id) => {
     );
   await GET_DB().collection(COLLECTION_NAME).drop(); // xoá collection;
 };
+const questions = [
+  {
+    type: 1,
+    question: {
+      frist: "",
+      last: "",
+    },
+    options: [""],
+    answer: "",
+  },
+  {
+    type: 2,
+    question: "",
+    answer: "",
+  },
+  {
+    type: 3,
+    questions: "",
+    options: [],
+    answer: "",
+  },
+  {
+    type: 4,
+    questions: "audio",
+    answer: "",
+  },
+  {
+    type: 5,
+    questions: {
+      audios: [{ key: 1, value: "" }],
+      texts: [{ key: 1, value: "" }],
+    },
+  },
+];
