@@ -4,6 +4,7 @@ import express from "express";
 import { StatusCodes } from "http-status-codes";
 import { boardController } from "~/controllers/boardController";
 import { boardValidation } from "~/validators/boardValidation";
+import Joi from "joi";
 const Router = express.Router();
 
 Router.route("/")
