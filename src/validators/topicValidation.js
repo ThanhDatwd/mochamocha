@@ -10,7 +10,6 @@ const createNew = async (req, res, next) => {
     title_translate: Joi.string().required().min(3).max(50).trim().strict(),
     thumb: Joi.string().required().trim().strict(),
     description: Joi.string().required().min(3).max(256).trim().strict(),
-    slug: Joi.string().required().min(3).trim().strict(),
     level_id: Joi.string()
       .pattern(OBJECT_ID_RULE)
       .message(OBJECT_ID_RULE_MESSAGE),
@@ -30,6 +29,6 @@ const createNew = async (req, res, next) => {
     );
   }
 };
-export const boardValidation = {
+export const topicValidation = {
   createNew,
 };
