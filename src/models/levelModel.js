@@ -1,10 +1,10 @@
+/* eslint-disable comma-dangle */
+/* eslint-disable semi */
 /* eslint-disable quotes */
 import Joi from "joi";
 import { ObjectId } from "mongodb";
 import { GET_DB } from "~/config/mongodb";
-import { columnModel } from "~/models/columnModel";
 import { OBJECT_ID_RULE, OBJECT_ID_RULE_MESSAGE } from "~/utils/validators";
-import { cardModel } from "~/models/cardModel";
 import { topicModel } from "./topicModel";
 import { vocabularyModel } from "./vocabularyModel";
 
@@ -36,7 +36,16 @@ const createNew = async (data) => {
     throw new Error(error);
   }
 };
-//GET DATA CỦA MÌNH BOARD
+//GET LIST
+const getMany = async () => {
+  try {
+    const result = await GET_DB.collection(LEVEL_COLLECTION_NAME).find();
+    return result || [];
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+//GET DATA CỦA MÌNH LEVEL
 const findOneById = async (id) => {
   try {
     return await GET_DB()
@@ -48,6 +57,7 @@ const findOneById = async (id) => {
     throw new Error(error);
   }
 };
+
 // GET DATA TONG HỢP
 const getDetails = async (id) => {
   try {
@@ -88,6 +98,7 @@ export const levelModel = {
   LEVEL_COLLECTION_NAME,
   LEVEL_COLLECTION_SCHEMA,
   createNew,
+  getMany,
   findOneById,
   getDetails,
 };

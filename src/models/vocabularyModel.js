@@ -79,11 +79,7 @@ const VOCABULARY_COLLECTION_SCHEMA = Joi.object({
         })
       ),
 
-      options: Joi.when("type", {
-        is: 1,
-        then: Joi.array().items(Joi.string()).required(),
-        otherwise: Joi.optional(),
-      }),
+      options: Joi.array().items(Joi.string()).optional(),
       answer: Joi.string().required(),
     })
   ),
@@ -113,7 +109,7 @@ const createNew = async (data) => {
     throw new Error(error);
   }
 };
-//GET DATA CỦA MÌNH BOARD
+//GET DATA CỦA MÌNH VOCAB
 const findOneById = async (id) => {
   try {
     return await GET_DB()
@@ -125,37 +121,28 @@ const findOneById = async (id) => {
     throw new Error(error);
   }
 };
-// GET DATA TONG HỢP
+//GET DATA CỦA MÌNH VOCAB
+const findByVocab = async (vocab) => {
+  try {
+    return await GET_DB()
+      .collection(VOCABULARY_COLLECTION_NAME)
+      .find({
+        vocab: new ObjectId(vocab),
+        _destroy: false,
+      });
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+// GET DATA BY
 const getDetails = async (id) => {
   try {
     const result = await GET_DB()
       .collection(VOCABULARY_COLLECTION_NAME)
-      .aggregate([
-        {
-          $match: {
-            _id: new ObjectId(id),
-            _destroy: false,
-          },
-        },
-        {
-          $lookup: {
-            from: columnModel.COLUMN_COLLECTION_NAME,
-            localField: "_id",
-            foreignField: "boadId",
-            as: "columns",
-          },
-        },
-        {
-          $lookup: {
-            from: cardModel.CARD_COLLECTION_NAME,
-            localField: "_id",
-            foreignField: "boadId",
-            as: "cards",
-          },
-        },
-      ])
-      .toArray();
-    return result[0] || {};
+      .findOne({
+        _id: new ObjectId(id),
+      });
+    return result;
   } catch (error) {
     throw new Error(error);
   }
@@ -167,4 +154,5 @@ export const vocabularyModel = {
   createNew,
   findOneById,
   getDetails,
+  findByVocab,
 };

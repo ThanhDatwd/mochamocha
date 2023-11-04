@@ -2,9 +2,8 @@
 import Joi from "joi";
 import { ObjectId } from "mongodb";
 import { GET_DB } from "~/config/mongodb";
-import { columnModel } from "~/models/columnModel";
 import { OBJECT_ID_RULE, OBJECT_ID_RULE_MESSAGE } from "~/utils/validators";
-import { cardModel } from "~/models/cardModel";
+import { vocabularyModel } from "./vocabularyModel";
 
 const TOPIC_COLLECTION_NAME = "topics";
 const TOPIC_COLLECTION_SCHEMA = Joi.object({
@@ -39,7 +38,16 @@ const createNew = async (data) => {
     throw new Error(error);
   }
 };
-//GET DATA CỦA MÌNH BOARD
+//GET LIST
+const getMany = async () => {
+  try {
+    const result = await GET_DB.collection(TOPIC_COLLECTION_NAME).find();
+    return result || [];
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+//GET DATA CỦA MÌNH TOPIC
 const findOneById = async (id) => {
   try {
     return await GET_DB()
@@ -65,18 +73,10 @@ const getDetails = async (id) => {
         },
         {
           $lookup: {
-            from: columnModel.COLUMN_COLLECTION_NAME,
+            from: vocabularyModel.VOCABULARY_COLLECTION_NAME,
             localField: "_id",
-            foreignField: "boadId",
-            as: "columns",
-          },
-        },
-        {
-          $lookup: {
-            from: cardModel.CARD_COLLECTION_NAME,
-            localField: "_id",
-            foreignField: "boadId",
-            as: "cards",
+            foreignField: "topic_id",
+            as: "vocabularies",
           },
         },
       ])
@@ -91,6 +91,7 @@ export const topicModel = {
   TOPIC_COLLECTION_NAME,
   TOPIC_COLLECTION_SCHEMA,
   createNew,
+  getMany,
   findOneById,
   getDetails,
 };
