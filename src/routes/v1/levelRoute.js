@@ -21,7 +21,7 @@ Router.route("/")
     boardValidation.createNew,
     boardController.createNew
   );
-Router.route("/:id")
+Router.route("/:slug")
   .get(boardController.getDetails)
   .put(boardValidation.createNew, boardController.createNew);
-export const boardRouter = Router;
+export const levelRouter = Router;
