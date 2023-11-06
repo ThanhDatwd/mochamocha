@@ -30,18 +30,20 @@ const validateBeforeCreate = async (data) => {
 const createNew = async (data) => {
   try {
     const validData = await validateBeforeCreate(data);
-    console.log("validData:", validData);
     return await GET_DB()
       .collection(TOPIC_COLLECTION_NAME)
-      .insertOne(validData);
+      .insertOne({ ...validData, level_id: new ObjectId(validData.level_id) });
   } catch (error) {
     throw new Error(error);
   }
 };
-//GET LIST
-const getMany = async () => {
+//GET ALL
+const getAll = async () => {
   try {
-    const result = await GET_DB.collection(TOPIC_COLLECTION_NAME).find();
+    const result = await GET_DB()
+      .collection(TOPIC_COLLECTION_NAME)
+      .find({ _destroy: false })
+      .toArray();
     return result || [];
   } catch (error) {
     throw new Error(error);
@@ -86,12 +88,32 @@ const getDetails = async (id) => {
     throw new Error(error);
   }
 };
-
+const pushVocabularyIds = async (vocabulary) => {
+  try {
+    const result = await GET_DB()
+      .collection(TOPIC_COLLECTION_NAME)
+      .findOneAndUpdate(
+        {
+          _id: new ObjectId(vocabulary.level_id),
+        },
+        {
+          $push: {
+            vocabulary_ids: new ObjectId(vocabulary._id),
+          },
+        },
+        { returnDocument: "after" }
+      );
+    return result.value || null;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
 export const topicModel = {
   TOPIC_COLLECTION_NAME,
   TOPIC_COLLECTION_SCHEMA,
   createNew,
-  getMany,
+  getAll,
   findOneById,
   getDetails,
+  pushVocabularyIds,
 };

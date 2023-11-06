@@ -37,10 +37,12 @@ const createNew = async (data) => {
   }
 };
 //GET LIST
-const getMany = async () => {
+const getAll = async () => {
   try {
-    const result = await GET_DB.collection(LEVEL_COLLECTION_NAME).find();
-    return result || [];
+    return await GET_DB()
+      .collection(LEVEL_COLLECTION_NAME)
+      .find({ _destroy: false })
+      .toArray();
   } catch (error) {
     throw new Error(error);
   }
@@ -93,12 +95,32 @@ const getDetails = async (id) => {
     throw new Error(error);
   }
 };
-
+const pushTopicIds = async (topic) => {
+  try {
+    const result = await GET_DB()
+      .collection(LEVEL_COLLECTION_NAME)
+      .findOneAndUpdate(
+        {
+          _id: new ObjectId(topic.level_id),
+        },
+        {
+          $push: {
+            topic_ids: new ObjectId(topic._id),
+          },
+        },
+        { returnDocument: "after" }
+      );
+    return result.value || null;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
 export const levelModel = {
   LEVEL_COLLECTION_NAME,
   LEVEL_COLLECTION_SCHEMA,
   createNew,
-  getMany,
+  getAll,
   findOneById,
   getDetails,
+  pushTopicIds,
 };

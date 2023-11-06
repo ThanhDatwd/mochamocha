@@ -101,10 +101,24 @@ const validateBeforeCreate = async (data) => {
 const createNew = async (data) => {
   try {
     const validData = await validateBeforeCreate(data);
-    console.log("validData:", validData);
     return await GET_DB()
       .collection(VOCABULARY_COLLECTION_NAME)
-      .insertOne(validData);
+      .insertOne({
+        ...validData,
+        level_id: new ObjectId(validData.level_id),
+        topic_id: new ObjectId(validData.topic_id),
+      });
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+const getAll = async () => {
+  try {
+    const result = await GET_DB()
+      .collection(VOCABULARY_COLLECTION_NAME)
+      .find({ _destroy: false })
+      .toArray();
+    return result || [];
   } catch (error) {
     throw new Error(error);
   }
@@ -127,7 +141,7 @@ const findByVocab = async (vocab) => {
     return await GET_DB()
       .collection(VOCABULARY_COLLECTION_NAME)
       .find({
-        vocab: new ObjectId(vocab),
+        vocab: `/${vocab}/`,
         _destroy: false,
       });
   } catch (error) {
@@ -152,6 +166,7 @@ export const vocabularyModel = {
   VOCABULARY_COLLECTION_NAME,
   VOCABULARY_COLLECTION_SCHEMA,
   createNew,
+  getAll,
   findOneById,
   getDetails,
   findByVocab,
