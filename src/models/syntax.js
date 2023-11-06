@@ -47,7 +47,21 @@ const syntax = async (id) => {
         $push: { key: "value" }, // thêm vào mảng key 1 phần tử
         $pull: { key: "value" }, // xoá 1 phần tử trong mảng key
         $addToSet: { key: "value" }, // chỉ thêm vào khi phần tử đó chưa tồn tại trong mảng
-      }
+      },
+      { returnDocument: "after" || "before" } // return document after hay before update
+    );
+  await GET_DB()
+    .collection(COLLECTION_NAME)
+    .findOneAndUpdate(
+      {
+        key: "value",
+      },
+      {
+        $push: {
+          key: "value",
+        },
+      },
+      { returnDocument: "after" || "before" } // return document after hay before update
     );
   await GET_DB().collection(COLLECTION_NAME).drop(); // xoá collection;
 };

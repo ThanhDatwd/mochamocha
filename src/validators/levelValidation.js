@@ -19,6 +19,6 @@ const createNew = async (req, res, next) => {
     );
   }
 };
-export const boardValidation = {
+export const levelValidation = {
   createNew,
 };

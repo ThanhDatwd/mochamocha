@@ -13,11 +13,6 @@ const createNew = async (req, res, next) => {
     level_id: Joi.string()
       .pattern(OBJECT_ID_RULE)
       .message(OBJECT_ID_RULE_MESSAGE),
-    vocabulary_ids: Joi.array()
-      .items(
-        Joi.string().pattern(OBJECT_ID_RULE).message(OBJECT_ID_RULE_MESSAGE)
-      )
-      .default([]),
   });
   try {
     // abortEarly: dừng validate ngay khi gặp lỗi đầu tiên
