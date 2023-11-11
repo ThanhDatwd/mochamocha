@@ -14,7 +14,7 @@ const createNew = async (reqBody) => {
   try {
     const newData = {
       ...reqBody,
-      slug: slugify(reqBody.title),
+      slug: slugify(reqBody.vocab),
     };
     const resultCreateNew = await vocabularyModel.createNew(newData);
     const dataAfterCreateNew = await vocabularyModel.findOneById(

@@ -43,12 +43,20 @@ const getDetails = async (id) => {
     }
     const resResult = cloneDeep(result);
     resResult.topics.forEach((topic) => {
-      topic.vocabularies = resResult.vocabularies.filter((vocab) => {
-        vocab.topic_id.toString() === vocab._id.toString();
-      });
+      topic.vocabularies = resResult.vocabularies.filter(
+        (vocab) => vocab.topic_id.toString() === topic._id.toString()
+      );
     });
     delete resResult.vocabularies;
     return resResult;
+  } catch (error) {
+    throw error;
+  }
+};
+const updateOneById = async (id, reqBody) => {
+  try {
+    const result = await levelModel.updateOneById(id, reqBody);
+    return result;
   } catch (error) {
     throw error;
   }
@@ -57,4 +65,5 @@ export const levelService = {
   createNew,
   getAll,
   getDetails,
+  updateOneById,
 };

@@ -12,6 +12,43 @@ const createNew = async (req, res, next) => {
 };
 const getAll = async (req, res, next) => {
   try {
+    const questions = [
+      {
+        type: 1,
+        question: {
+          frist: "",
+          last: "",
+        },
+        options: [""],
+        answer: "",
+      },
+      // nhap tu ban phim
+      {
+        type: 2,
+        question: [""],
+        answer: "",
+      },
+      // cau hoi tieng anh cau  tra loi tieng viet
+      {
+        type: 3,
+        questions: "i am a teacher",
+        options: ["giao vien", "hoc sinh", "hieu truong"],
+        answer: "giao vien",
+      },
+      {
+        type: 4,
+        questions: "audio",
+        answer: "",
+      },
+      // dungf cho practice match nhieeur dap an
+      {
+        type: 5,
+        questions: {
+          audios: [{ key: 1, value: "" }],
+          texts: [{ key: 1, value: "" }],
+        },
+      },
+    ];
     const result = await vocabularyService.getAll();
     res.status(StatusCodes.OK).json(result);
   } catch (error) {
