@@ -14,6 +14,7 @@ const LEVEL_COLLECTION_SCHEMA = Joi.object({
   description: Joi.string().required().min(3).max(256).trim().strict(),
   goal: Joi.string().required().trim().strict(),
   slug: Joi.string().required().min(3).trim().strict(),
+  order: Joi.number().default(0),
   topic_ids: Joi.array()
     .items(Joi.string().pattern(OBJECT_ID_RULE).message(OBJECT_ID_RULE_MESSAGE))
     .default([]),
@@ -28,10 +29,18 @@ const validateBeforeCreate = async (data) => {
 };
 const createNew = async (data) => {
   try {
+    let resultFileMMaxOrder = await GET_DB()
+      .collection(LEVEL_COLLECTION_NAME)
+      .find()
+      .sort({ order: -1 })
+      .limit(1)
+      .toArray();
+    let order =
+      resultFileMMaxOrder.length > 0 ? resultFileMMaxOrder[0].order + 1 : 1;
     const validData = await validateBeforeCreate(data);
     return await GET_DB()
       .collection(LEVEL_COLLECTION_NAME)
-      .insertOne(validData);
+      .insertOne({ ...validData, order });
   } catch (error) {
     throw new Error(error);
   }
@@ -42,6 +51,7 @@ const getAll = async () => {
     return await GET_DB()
       .collection(LEVEL_COLLECTION_NAME)
       .find({ _destroy: false })
+      .sort({ order: 1 })
       .toArray();
   } catch (error) {
     throw new Error(error);
@@ -95,11 +105,72 @@ const getDetails = async (id) => {
     throw new Error(error);
   }
 };
+// UPDATE AREA
 const updateOneById = async (id, data) => {
   try {
     return await GET_DB()
       .collection(LEVEL_COLLECTION_NAME)
-      .findOneAndUpdate({ _id: new ObjectId(id) });
+      .findOneAndUpdate(
+        { _id: new ObjectId(id) },
+        {
+          $set: data,
+        },
+        { returnDocument: "after" }
+      );
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+const updateManyById = async (id, data) => {
+  try {
+    return await GET_DB()
+      .collection(LEVEL_COLLECTION_NAME)
+      .findOneAndUpdate(
+        { _id: new ObjectId(id) },
+        {
+          $set: data,
+        },
+        { returnDocument: "after" }
+      );
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+const updateOrder = async (id, oldOrder, newOrder) => {
+  try {
+    await GET_DB()
+      .collection(LEVEL_COLLECTION_NAME)
+      .updateMany(
+        {
+          order: { $gte: newOrder, $lt: oldOrder },
+        },
+        { $inc: { order: 1 } }
+      );
+    return await GET_DB()
+      .collection(LEVEL_COLLECTION_NAME)
+      .findOneAndUpdate(
+        { _id: new ObjectId(id) },
+        {
+          $set: {
+            order: newOrder,
+          },
+        },
+        { returnDocument: "after" }
+      );
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+const destroySoftOneById = async (id) => {
+  try {
+    return await GET_DB()
+      .collection(LEVEL_COLLECTION_NAME)
+      .findOneAndUpdate(
+        { _id: new ObjectId(id) },
+        {
+          $set: { _destroy: true },
+        }
+      );
   } catch (error) {
     throw new Error(error);
   }
@@ -133,4 +204,7 @@ export const levelModel = {
   getDetails,
   pushTopicIds,
   updateOneById,
+  updateManyById,
+  destroySoftOneById,
+  updateOrder,
 };

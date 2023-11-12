@@ -38,10 +38,21 @@ const updateOneById = async (req, res, next) => {
     next(error);
   }
 };
+const updateOrder = async (req, res, next) => {
+  try {
+    const levelId = req.params.id;
+    const result = await levelService.updateOrder(levelId, req.body);
+
+    res.status(StatusCodes.OK).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
 
 export const levelController = {
   createNew,
   getAll,
   getDetails,
   updateOneById,
+  updateOrder
 };

@@ -25,6 +25,22 @@ const createNew = async (req, res, next) => {
     );
   }
 };
+const updateOrder = async (req, res, next) => {
+  const correctCondition = Joi.object({
+    oldOrder: Joi.number().required(),
+    newOrder: Joi.number().required(),
+  });
+  try {
+    // abortEarly: dừng validate ngay khi gặp lỗi đầu tiên
+    await correctCondition.validateAsync(req.body, { abortEarly: false });
+    next();
+  } catch (error) {
+    next(
+      new ApiError(StatusCodes.UNPROCESSABLE_ENTITY, new Error(error).message)
+    );
+  }
+};
 export const topicValidation = {
   createNew,
+  updateOrder
 };

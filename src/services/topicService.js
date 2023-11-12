@@ -50,8 +50,26 @@ const getDetails = async (id) => {
     throw error;
   }
 };
+const updateOneById = async (id, reqBody) => {
+  try {
+    const result = await topicModel.updateOneById(id, reqBody);
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
+const updateOrder = async (id, reqBody) => {
+  try {
+    const { oldOrder, newOrder } = reqBody;
+    const result = await topicModel.updateOrder(id, oldOrder, newOrder);
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
 export const topicService = {
   createNew,
   getAll,
   getDetails,
+  updateOneById,updateOrder
 };

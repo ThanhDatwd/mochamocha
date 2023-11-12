@@ -10,5 +10,7 @@ Router.route("/")
   .post(levelValidation.createNew, levelController.createNew);
 Router.route("/:id")
   .get(levelController.getDetails)
-  .put(levelValidation.createNew, levelController.createNew);
+  .put(levelValidation.createNew, levelController.updateOneById);
+Router.route("/update-order/:id")
+  .put(levelValidation.updateOrder, levelController.updateOrder);
 export const levelRouter = Router;

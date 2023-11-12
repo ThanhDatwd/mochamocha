@@ -1,3 +1,5 @@
+/* eslint-disable comma-dangle */
+/* eslint-disable semi */
 /* eslint-disable quotes */
 import Joi from "joi";
 import { ObjectId } from "mongodb";
@@ -12,6 +14,7 @@ const TOPIC_COLLECTION_SCHEMA = Joi.object({
   thumb: Joi.string().required().trim().strict(),
   description: Joi.string().required().min(3).max(256).trim().strict(),
   slug: Joi.string().required().min(3).trim().strict(),
+  order: Joi.number().default(0),
   level_id: Joi.string()
     .required()
     .pattern(OBJECT_ID_RULE)
@@ -31,9 +34,21 @@ const validateBeforeCreate = async (data) => {
 const createNew = async (data) => {
   try {
     const validData = await validateBeforeCreate(data);
+    let resultFileMMaxOrder = await GET_DB()
+      .collection(TOPIC_COLLECTION_NAME)
+      .find()
+      .sort({ order: -1 })
+      .limit(1)
+      .toArray();
+    let order =
+      resultFileMMaxOrder.length > 0 ? resultFileMMaxOrder[0].order : 1;
     return await GET_DB()
       .collection(TOPIC_COLLECTION_NAME)
-      .insertOne({ ...validData, level_id: new ObjectId(validData.level_id) });
+      .insertOne({
+        ...validData,
+        level_id: new ObjectId(validData.level_id),
+        order,
+      });
   } catch (error) {
     throw new Error(error);
   }
@@ -44,6 +59,7 @@ const getAll = async () => {
     const result = await GET_DB()
       .collection(TOPIC_COLLECTION_NAME)
       .find({ _destroy: false })
+      .sort({ order: 1 })
       .toArray();
     return result || [];
   } catch (error) {
@@ -89,6 +105,62 @@ const getDetails = async (id) => {
     throw new Error(error);
   }
 };
+// UPDATE AREA
+const updateOneById = async (id, data) => {
+  try {
+    return await GET_DB()
+      .collection(TOPIC_COLLECTION_NAME)
+      .findOneAndUpdate(
+        { _id: new ObjectId(id) },
+        {
+          $set: data,
+        },
+        { returnDocument: "after" }
+      );
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+const updateManyById = async (id, data) => {
+  try {
+    return await GET_DB()
+      .collection(TOPIC_COLLECTION_NAME)
+      .findOneAndUpdate(
+        { _id: new ObjectId(id) },
+        {
+          $set: data,
+        },
+        { returnDocument: "after" }
+      );
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+const updateOrder = async (id, oldOrder, newOrder) => {
+  try {
+    await GET_DB()
+      .collection(TOPIC_COLLECTION_NAME)
+      .updateMany(
+        {
+          order: { $gte: newOrder, $lt: oldOrder },
+        },
+        { $inc: { order: 1 } }
+      );
+    return await GET_DB()
+      .collection(TOPIC_COLLECTION_NAME)
+      .findOneAndUpdate(
+        { _id: new ObjectId(id) },
+        {
+          $set: {
+            order: newOrder,
+          },
+        },
+        { returnDocument: "after" }
+      );
+  } catch (error) {
+    throw new Error(error);
+  }
+};
 const pushVocabularyIds = async (vocabulary) => {
   try {
     const result = await GET_DB()
@@ -116,5 +188,8 @@ export const topicModel = {
   getAll,
   findOneById,
   getDetails,
+  updateOneById,
+  updateManyById,
+  updateOrder,
   pushVocabularyIds,
 };

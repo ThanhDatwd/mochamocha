@@ -28,9 +28,31 @@ const getDetails = async (req, res, next) => {
     next(error);
   }
 };
+const updateOneById = async (req, res, next) => {
+  try {
+    const topicId = req.params.id;
+    const result = await topicService.updateOneById(topicId, req.body);
+
+    res.status(StatusCodes.OK).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+const updateOrder = async (req, res, next) => {
+  try {
+    const topicId = req.params.id;
+    const result = await topicService.updateOrder(topicId, req.body);
+
+    res.status(StatusCodes.OK).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
 
 export const topicController = {
   createNew,
   getAll,
   getDetails,
+  updateOneById,
+  updateOrder
 };

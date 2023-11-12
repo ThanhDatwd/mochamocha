@@ -11,4 +11,6 @@ Router.route("/")
 Router.route("/:id")
   .get(topicController.getDetails)
   .put(topicValidation.createNew, topicController.createNew);
+Router.route("/update-order/:id")
+  .put(topicValidation.updateOrder, topicController.updateOrder);
 export const topicRouter = Router;

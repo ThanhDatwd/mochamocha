@@ -61,9 +61,19 @@ const updateOneById = async (id, reqBody) => {
     throw error;
   }
 };
+const updateOrder = async (id, reqBody) => {
+  try {
+    const { oldOrder, newOrder } = reqBody;
+    const result = await levelModel.updateOrder(id, oldOrder, newOrder);
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
 export const levelService = {
   createNew,
   getAll,
   getDetails,
   updateOneById,
+  updateOrder,
 };
