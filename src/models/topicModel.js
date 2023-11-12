@@ -13,6 +13,7 @@ const TOPIC_COLLECTION_SCHEMA = Joi.object({
   description: Joi.string().required().min(3).max(256).trim().strict(),
   slug: Joi.string().required().min(3).trim().strict(),
   level_id: Joi.string()
+    .required()
     .pattern(OBJECT_ID_RULE)
     .message(OBJECT_ID_RULE_MESSAGE),
   vocabulary_ids: Joi.array()
@@ -94,7 +95,7 @@ const pushVocabularyIds = async (vocabulary) => {
       .collection(TOPIC_COLLECTION_NAME)
       .findOneAndUpdate(
         {
-          _id: new ObjectId(vocabulary.level_id),
+          _id: new ObjectId(vocabulary.topic_id),
         },
         {
           $push: {

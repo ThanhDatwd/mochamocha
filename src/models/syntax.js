@@ -75,22 +75,25 @@ const questions = [
     options: [""],
     answer: "",
   },
+  // nhap tu ban phim
   {
     type: 2,
-    question: "",
+    question: [""],
     answer: "",
   },
+  // cau hoi tieng anh cau  tra loi tieng viet
   {
     type: 3,
-    questions: "",
-    options: [],
-    answer: "",
+    questions: "i am a teacher",
+    options: ["giao vien", "hoc sinh", "hieu truong"],
+    answer: "giao vien",
   },
   {
     type: 4,
     questions: "audio",
     answer: "",
   },
+  // dungf cho practice match nhieeur dap an
   {
     type: 5,
     questions: {

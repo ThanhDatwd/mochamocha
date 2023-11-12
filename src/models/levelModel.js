@@ -95,6 +95,15 @@ const getDetails = async (id) => {
     throw new Error(error);
   }
 };
+const updateOneById = async (id, data) => {
+  try {
+    return await GET_DB()
+      .collection(LEVEL_COLLECTION_NAME)
+      .findOneAndUpdate({ _id: new ObjectId(id) });
+  } catch (error) {
+    throw new Error(error);
+  }
+};
 const pushTopicIds = async (topic) => {
   try {
     const result = await GET_DB()
@@ -123,4 +132,5 @@ export const levelModel = {
   findOneById,
   getDetails,
   pushTopicIds,
+  updateOneById,
 };

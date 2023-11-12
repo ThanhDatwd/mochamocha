@@ -11,6 +11,7 @@ const createNew = async (req, res, next) => {
     thumb: Joi.string().required().trim().strict(),
     description: Joi.string().required().min(3).max(256).trim().strict(),
     level_id: Joi.string()
+      .required()
       .pattern(OBJECT_ID_RULE)
       .message(OBJECT_ID_RULE_MESSAGE),
   });

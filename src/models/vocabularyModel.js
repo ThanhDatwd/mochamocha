@@ -25,8 +25,8 @@ const VOCABULARY_COLLECTION_SCHEMA = Joi.object({
   //     )
   //     .required(),
   type_info: Joi.object({
-    title: Joi.string().required().trim().strict(),
-    title_translate: Joi.string().required().trim().strict(),
+    type: Joi.string().required().trim().strict(),
+    type_translate: Joi.string().required().trim().strict(),
     symbol: Joi.string().required().trim().strict(),
   }),
   audio: Joi.string().required().trim().strict(),
@@ -38,13 +38,13 @@ const VOCABULARY_COLLECTION_SCHEMA = Joi.object({
         Joi.when("type", {
           is: 1,
           then: Joi.object().keys({
-            first: Joi.string().required(),
-            last: Joi.string().required(),
+            frist: Joi.string().allow(""),
+            last: Joi.string().allow(""),
           }),
           otherwise: Joi.string().allow(""),
         }),
         Joi.when("type", {
-          is: 3,
+          is: 2,
           then: Joi.array().items().default([]),
           otherwise: Joi.string().allow(""),
         }),
@@ -84,9 +84,11 @@ const VOCABULARY_COLLECTION_SCHEMA = Joi.object({
     })
   ),
   level_id: Joi.string()
+    .required()
     .pattern(OBJECT_ID_RULE)
     .message(OBJECT_ID_RULE_MESSAGE),
   topic_id: Joi.string()
+    .required()
     .pattern(OBJECT_ID_RULE)
     .message(OBJECT_ID_RULE_MESSAGE),
   createeAt: Joi.date().timestamp("javascript").default(Date.now),
