@@ -22,7 +22,7 @@ const TOPIC_COLLECTION_SCHEMA = Joi.object({
   vocabulary_ids: Joi.array()
     .items(Joi.string().pattern(OBJECT_ID_RULE).message(OBJECT_ID_RULE_MESSAGE))
     .default([]),
-  createeAt: Joi.date().timestamp("javascript").default(Date.now),
+  createdAt: Joi.date().timestamp("javascript").default(Date.now),
   updatedAt: Joi.date().timestamp("javascript").default(null),
   _destroy: Joi.boolean().default(false),
 });
